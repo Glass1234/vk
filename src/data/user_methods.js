@@ -16,7 +16,6 @@ export default [
         getUserPeople: async function (id) {
             const apiMethod = 'friends.get';
             let apiUrl = `https://api.vk.com/method/${apiMethod}?access_token=${this.token}+&order=hints+&user_id=${id}+&v=5.131`
-            console.log(id)
             const res = await axios({
                 method: "get",
                 url: apiUrl
@@ -61,7 +60,7 @@ export default [
         },
         getFriendInfo: async function (id) {
             const apiMethod = 'users.get';
-            const apiUrl = `https://api.vk.com/method/${apiMethod}?access_token=${this.token}+&fields=status,photo_200,bdate,city+&user_ids=${id}+&v=5.131`
+            const apiUrl = `https://api.vk.com/method/${apiMethod}?access_token=${this.token}+&fields=status,photo_200,bdate,city,blacklisted+&user_ids=${id}+&v=5.131`
             const res = await axios({
                 method: "get",
                 url: apiUrl
