@@ -177,11 +177,11 @@ export default {
       if (this.$route.params.id == store.state.user.id) {
         this.user = store.state.user
       } else {
-        this.user = (await user_methods[0].getFriendInfo(this.$route.params.id)).data.response[0]
+        this.user = (await user_methods.getFriendInfo(this.$route.params.id)).data.response[0]
       }
     },
     async getPeople() {
-      this.people = (await user_methods[0].getUserPeople(this.user.id)).data
+      this.people = (await user_methods.getUserPeople(this.user.id)).data
       if (typeof this.people['error'] !== "undefined" && this.people.error.error_code === 30) {
         this.isPrived = true
       } else {
@@ -190,22 +190,22 @@ export default {
       }
     },
     async getGroups() {
-      this.groups = (await user_methods[0].getUserCountGroups(this.user.id)).data.response
+      this.groups = (await user_methods.getUserCountGroups(this.user.id)).data.response
     },
     async getCommunities() {
-      this.communities = (await user_methods[0].getUserCountCommunitiles(this.user.id)).data.response
+      this.communities = (await user_methods.getUserCountCommunitiles(this.user.id)).data.response
     },
     async getFriendsOnli() {
       if (this.isPrived) {
         return
       }
-      this.friendsOnline = (await user_methods[0].getFriendsOnline(this.user.id)).data.response
+      this.friendsOnline = (await user_methods.getFriendsOnline(this.user.id)).data.response
       this.friendsOnline = this.friendsOnline.online.concat(this.friendsOnline.online_mobile)
     },
     async getUsersInfOnline() {
-      this.usersInfOnline = (await user_methods[0].getUsersMin(this.friendsOnline)).data.response
+      this.usersInfOnline = (await user_methods.getUsersMin(this.friendsOnline)).data.response
       this.usersInfOnline = this.cropArr(this.usersInfOnline)
-      this.usersInfOfline = (await user_methods[0].getUsersMin(this.cropArr(this.people.items))).data.response
+      this.usersInfOfline = (await user_methods.getUsersMin(this.cropArr(this.people.items))).data.response
       this.usersInfOfline = this.cropArr(this.usersInfOfline)
     },
     async init() {

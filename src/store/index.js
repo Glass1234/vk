@@ -12,7 +12,7 @@ const store = createStore({
     },
     actions: {
         async SET_USER_FROM_API(context) {
-            const data = await user_methods[0].getUserInfo()
+            const data = await user_methods.getUserInfo()
             context.commit('SET_USER', data)
         }
     },
