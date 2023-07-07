@@ -2,7 +2,7 @@ import axios from "axios";
 import token from "@/data/token";
 
 export default {
-    token: token[0].token,
+    token: token.token,
     getUserInfo: async function () {
         const apiMethod = 'account.getProfileInfo';
         const apiUrl = `https://api.vk.com/method/${apiMethod}?access_token=${this.token}&v=5.131`

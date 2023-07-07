@@ -1,5 +1,5 @@
 import {createStore} from 'vuex'
-import user_methods from "@/data/user_methods";
+import {api} from "@/data/vkApi";
 
 const store = createStore({
     state: {
@@ -12,7 +12,7 @@ const store = createStore({
     },
     actions: {
         async SET_USER_FROM_API(context) {
-            const data = await user_methods.getUserInfo()
+            const data = await api.getUserInfo()
             context.commit('SET_USER', data)
         }
     },
