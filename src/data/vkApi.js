@@ -1,5 +1,6 @@
 import token from "@/data/token";
 import axios from "axios";
+import store from "@/store";
 
 export class Api {
     #token = token.token
@@ -14,7 +15,6 @@ export class Api {
     }
 
     // возвращает основную информацию о профиле
-
     async getUserInfo() {
         return await this.#getRequest('account.getProfileInfo')
     }
@@ -52,6 +52,12 @@ export class Api {
     // вовзращает расширенную инфу о пользователе
     async getFriendInfo(id) {
         const data = `&fields=status,photo_200,bdate,city,blacklisted&user_ids=${id}`
+        return await this.#getRequest('users.get', data)
+    }
+
+    // возвращает когда последний раз пользователь был в сети
+    async getLastOnlineUser(id = null) {
+        const data = `&fields=last_seen&user_ids=${id === null ? store.state.user.id : id}`
         return await this.#getRequest('users.get', data)
     }
 }

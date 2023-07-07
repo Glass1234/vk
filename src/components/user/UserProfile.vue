@@ -73,8 +73,30 @@
                       </v-card-actions>
                     </v-card>
                   </template>
+
                 </v-dialog>
               </div>
+              <div>Пользователь был в сети</div>
+              <v-card color="grey-darken-4" v-show="userOnlineTime">
+                <v-row>
+                  <v-card-item>
+                    Год: {{ userOnlineTime.years }}
+                  </v-card-item>
+                  <v-card-item>
+                    День: {{ userOnlineTime.days }}
+                  </v-card-item>
+                  <v-card-item>
+                    Час: {{ userOnlineTime.hours }}
+                  </v-card-item>
+                  <v-card-item>
+                    Минута: {{ userOnlineTime.minutes }}
+                  </v-card-item>
+                  <v-card-item>
+                    Секунда: {{ userOnlineTime.seconds }}
+                  </v-card-item>
+                </v-row>
+
+              </v-card>
             </div>
           </div>
         </v-card>
@@ -159,7 +181,8 @@ export default {
       friendsOnline: null,
       usersInfOnline: null,
       usersInfOfline: null,
-      isPrived: true
+      isPrived: true,
+      userOnlineTime: {},
     }
   },
   methods: {
@@ -172,6 +195,18 @@ export default {
       } else {
         return arr
       }
+    },
+    convertDate(unixTime) {
+      const date = new Date(unixTime * 1000)
+      this.userOnlineTime['years'] = date.getFullYear()
+      this.userOnlineTime['days'] = date.getDay()
+      this.userOnlineTime['hours'] = date.getHours()
+      this.userOnlineTime['minutes'] = date.getMinutes()
+      this.userOnlineTime['seconds'] = date.getSeconds()
+    },
+    async getOnlineStatus() {
+      const date = (await api.getLastOnlineUser(this.user.id)).data.response[0].last_seen.time
+      this.convertDate(date)
     },
     async checkUser() {
       if (this.$route.params.id == store.state.user.id) {
@@ -214,6 +249,7 @@ export default {
         this.getPeople(),
         this.getGroups(),
         this.getCommunities(),
+        this.getOnlineStatus()
       ])
       await this.getFriendsOnli()
       await this.getUsersInfOnline()
