@@ -76,23 +76,16 @@
 
                 </v-dialog>
               </div>
-              <div>Пользователь был в сети</div>
-              <v-card color="grey-darken-4" v-show="userOnlineTime">
-                <v-row>
+              <div>Пользователь был в сети
+                <span v-show="!userOnlineTime">очень давно</span>
+              </div>
+              <v-card color="grey-darken-4" v-show="userOnlineTime" style="width: fit-content;">
+                <v-row class="pa-1">
                   <v-card-item>
-                    Год: {{ userOnlineTime.years }}
+                    {{ userOnlineTime?.hours }} : {{ userOnlineTime?.minutes }}
                   </v-card-item>
                   <v-card-item>
-                    День: {{ userOnlineTime.days }}
-                  </v-card-item>
-                  <v-card-item>
-                    Час: {{ userOnlineTime.hours }}
-                  </v-card-item>
-                  <v-card-item>
-                    Минута: {{ userOnlineTime.minutes }}
-                  </v-card-item>
-                  <v-card-item>
-                    Секунда: {{ userOnlineTime.seconds }}
+                    {{ userOnlineTime?.days }}.{{ userOnlineTime?.month }}.{{ userOnlineTime?.years }}
                   </v-card-item>
                 </v-row>
 
@@ -199,13 +192,17 @@ export default {
     convertDate(unixTime) {
       const date = new Date(unixTime * 1000)
       this.userOnlineTime['years'] = date.getFullYear()
-      this.userOnlineTime['days'] = date.getDay()
-      this.userOnlineTime['hours'] = date.getHours()
-      this.userOnlineTime['minutes'] = date.getMinutes()
-      this.userOnlineTime['seconds'] = date.getSeconds()
+      this.userOnlineTime['month'] = date.getMonth() < 10 ? `0${date.getMonth()}` : date.getMonth()
+      this.userOnlineTime['days'] = date.getUTCDate() < 10 ? `0${date.getUTCDate()}` : date.getUTCDate()
+      this.userOnlineTime['hours'] = date.getHours() < 10 ? `0${date.getHours()}` : date.getHours()
+      this.userOnlineTime['minutes'] = date.getMinutes() < 10 ? `0${date.getMinutes()}` : date.getMinutes()
     },
     async getOnlineStatus() {
-      const date = (await api.getLastOnlineUser(this.user.id)).data.response[0].last_seen.time
+      const date = (await api.getLastOnlineUser(this.user.id)).data.response[0].last_seen?.time
+      if (!date) {
+        this.userOnlineTime = date
+        return
+      }
       this.convertDate(date)
     },
     async checkUser() {
