@@ -217,7 +217,7 @@ export default {
     },
     async getPeople() {
       this.people = (await api.getUserPeople(this.user.id)).data
-      if (typeof this.people['error'] !== "undefined" && this.people.error.error_code === 30) {
+      if (this.people.error?.error_code === 30) {
         this.isPrived = true
       } else {
         this.isPrived = false

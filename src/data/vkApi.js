@@ -23,10 +23,11 @@ export class Api {
 
     async #getRequest(apiMethod, data = null) {
         const url = this.#createURL(apiMethod, data)
-        return (await axios({
-            method: 'get',
-            url: url
-        }))
+        let req = await axios.get(url.toString())
+        while (req.data.error?.error_code === 6) {
+            req = await axios.get(url.toString())
+        }
+        return req
     }
 
     // возвращает основную информацию о профиле
@@ -88,9 +89,9 @@ export class Api {
 
     // возвращает когда последний раз пользователь был в сети
     async getLastOnlineUser(id = null) {
-        const data={
-            fields:'last_seen',
-            user_ids:id === null ? store.state.user.id : id
+        const data = {
+            fields: 'last_seen',
+            user_ids: id === null ? store.state.user.id : id
         }
         return await this.#getRequest('users.get', data)
     }
