@@ -158,6 +158,7 @@ export default {
   watch: {
     '$route.params.id'() {
       this.init()
+      console.log('2');
     }
   },
   computed: {
@@ -241,6 +242,15 @@ export default {
       this.usersInfOfline = this.cropArr(this.usersInfOfline)
     },
     async init() {
+      this.user = null
+      this.people = null
+      this.groups = null
+      this.communities = null
+      this.friendsOnline = null
+      this.usersInfOnline = null
+      this.usersInfOfline = null
+      this.isPrived = true
+      this.userOnlineTime = {}
       await this.checkUser()
       await Promise.all([
         this.getPeople(),
