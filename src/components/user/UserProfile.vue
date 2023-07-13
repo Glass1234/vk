@@ -104,7 +104,7 @@
         <v-card class="pa-3" color="grey-darken-3">
           <v-card color="grey-darken-2 pa-2">
             <template v-if="usersInfOnline">
-              <v-btn class="d-flex" variant="text">
+              <v-btn class="d-flex" variant="text" @click="this.$router.push(`/friends?id=${user.id}&section=online`)">
                 <span class="text-caption">Друзья онлайн</span>
                 <span class="text-caption text-grey-lighten-1 ml-1" v-if="friendsOnline">{{
                     friendsOnline.length
@@ -122,7 +122,7 @@
               <v-divider class="my-2"/>
             </template>
             <template v-if="!isPrived">
-              <v-btn class="d-flex" variant="text" @click="this.$router.push('/friends')">
+              <v-btn class="d-flex" variant="text" @click="this.$router.push(`/friends?id=${user.id}&section=all`)">
                 <span class="text-caption">Друзья</span>
                 <span class="text-caption text-grey-lighten-1 ml-1" v-if="people">{{ people.count }}</span>
               </v-btn>
@@ -158,7 +158,6 @@ export default {
   watch: {
     '$route.params.id'() {
       this.init()
-      console.log('2');
     }
   },
   computed: {

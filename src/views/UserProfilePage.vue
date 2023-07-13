@@ -7,7 +7,8 @@
                    color="grey-darken-2"
                    :elevation="24"
                    border
-                   rounded>
+                   rounded
+                   max-height="260">
             <SideBar/>
           </v-sheet>
         </v-col>
