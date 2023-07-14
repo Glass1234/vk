@@ -18,14 +18,15 @@
         </div>
       </v-tab>
     </v-tabs>
+    <v-text-field v-model="inputSearch" class="mx-2 mt-2" label="Поиск друзей" variant="underlined"></v-text-field>
     <v-window v-model="tab" class="rounded">
       <v-window-item value="all" class="py-1">
-        <template v-for="item in allPeople" :key="item.id">
+        <template v-for="item in searchPeople(allPeople,inputSearch)" :key="item.id">
           <item-user :user="item"/>
         </template>
       </v-window-item>
       <v-window-item value="online">
-        <template v-for="item in onlinePeople" :key="item.id">
+        <template v-for="item in searchPeople(onlinePeople, inputSearch)" :key="item.id">
           <item-user :user="item"/>
         </template>
       </v-window-item>
@@ -50,10 +51,20 @@ export default {
       tab: null,
       allPeople: {},
       onlinePeople: {},
+      inputSearch: '',
       idSearch: store.state.user.id
     }
   },
   methods: {
+    searchPeople(users, name) {
+      if (name === '') {
+        return users
+      }
+      const fullName = name.toLowerCase().replaceAll(' ', '')
+      return users.filter(user =>
+          (user.first_name + user.last_name).toLowerCase().replaceAll(' ', '').indexOf(fullName) !== -1
+      )
+    },
     async getAllPeople() {
       this.allPeople = (await api.getUserPeople(this.idSearch)).data.response
       this.allPeople = (await api.getUsersMin(this.allPeople.items)).data.response
@@ -66,7 +77,6 @@ export default {
       if (this.$route.query?.id) {
         this.idSearch = this.$route.query.id
       }
-      console.log(this.idSearch)
       await Promise.all([
         this.getAllPeople(),
         this.getOnlinePeople()
