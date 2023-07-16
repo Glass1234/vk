@@ -15,9 +15,6 @@ import store from "@/store";
 
 export default {
   name: 'SideBar',
-  mounted() {
-    console.log()
-  },
   data() {
     return {
       items: [
@@ -31,7 +28,6 @@ export default {
   },
   methods: {
     goPage(url) {
-      console.log(url)
       this.$router.push(url);
     }
   }

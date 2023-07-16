@@ -46,6 +46,11 @@ export default {
     this.init()
     this.tab = this.$route.query.section
   },
+  watch:{
+    '$route.params'(){
+      this.init()
+    }
+  },
   data() {
     return {
       tab: null,
@@ -76,7 +81,7 @@ export default {
     async init() {
       if (this.$route.query?.id) {
         this.idSearch = this.$route.query.id
-      }
+      }else {this.idSearch = store.state.user.id}
       await Promise.all([
         this.getAllPeople(),
         this.getOnlinePeople()
