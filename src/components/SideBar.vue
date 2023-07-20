@@ -22,7 +22,7 @@ export default {
         {name: 'Новости', path: require('@/assets/icons/newspaper.svg'), to: ''},
         {name: 'Мессенджер', path: require('@/assets/icons/chat.svg'), to: ''},
         {name: 'Друзья', path: require('@/assets/icons/group.svg'), to: '/friends?&section=all'},
-        {name: 'Фотографии', path: require('@/assets/icons/image.svg'), to: ''},
+        {name: 'Фотографии', path: require('@/assets/icons/image.svg'), to: `/albums?id=${store.state.user.id}`},
       ]
     }
   },

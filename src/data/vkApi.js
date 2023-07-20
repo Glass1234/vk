@@ -95,6 +95,59 @@ export class Api {
         }
         return await this.#getRequest('users.get', data)
     }
+
+    // возвращает id не основых альбомов
+    async getAlbums(id = store.state.user.id) {
+        const data = {
+            owner_id: id,
+            rev: true
+        }
+        return await this.#getRequest('photos.getAlbums', data)
+    }
+
+    // возвращает альбом со стены
+    async getWallAlbum(id = store.state.user.id, count = 1) {
+        const data = {
+            owner_id: id,
+            count: count,
+            album_id: 'wall',
+            rev: true
+        }
+        return await this.#getRequest('photos.get', data)
+    }
+
+    // возвращает альбом профиля
+    async getProfileAlbum(id = store.state.user.id, count = 1) {
+        const data = {
+            owner_id: id,
+            count: count,
+            album_id: 'profile',
+            rev: true
+        }
+        return await this.#getRequest('photos.get', data)
+    }
+
+    // возвращает альбом с сохрами
+    async getSavedAlbum(id = store.state.user.id, count = 1) {
+        const data = {
+            owner_id: id,
+            count: count,
+            album_id: 'saved',
+            rev: true
+        }
+        return await this.#getRequest('photos.get', data)
+    }
+
+    // возвращает последнюю картинку из альбома
+    async getLastPictureAlbums(id = store.state.user.id, album_id, count = 1) {
+        const data = {
+            owner_id: id,
+            count: count,
+            album_id: album_id,
+            rev: true
+        }
+        return await this.#getRequest('photos.get', data)
+    }
 }
 
 export let api = new Api()

@@ -48,6 +48,7 @@ export default {
   },
   watch:{
     '$route.params'(){
+      console.log(this.$route)
       this.init()
     }
   },
