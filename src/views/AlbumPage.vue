@@ -13,7 +13,7 @@
           </v-sheet>
         </v-col>
         <v-col class="d-flex">
-          <Album_ :album-id="album_id" :owner-id="owner_id"/>
+          <Album_ :album-id="album_id" :owner-id="owner_id" ref="albumScroll"/>
         </v-col>
       </v-row>
     </v-container>
@@ -30,11 +30,25 @@ export default {
     this.album_id = this.$route.params.album_id
     this.owner_id = this.$route.params.id
   },
+  mounted() {
+    window.addEventListener("scroll", this.handleScroll);
+  },
+  unmounted() {
+    window.removeEventListener("scroll", this.handleScroll);
+  },
   data() {
     return {
       album_id: null,
       owner_id: null
     }
+  },
+  methods: {
+    handleScroll() {
+      if ((this.$refs.albumScroll.$el.getBoundingClientRect().bottom < window.innerHeight + 200)
+          && this.$refs.albumScroll.isLoad === 0) {
+        this.$refs.albumScroll.addImages()
+      }
+    },
   },
   components: {Album_, SideBar},
 }

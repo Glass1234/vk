@@ -30,18 +30,30 @@ export default {
     this.init()
   },
   data() {
-    return {images: []}
+    return {images: [], isLoad: 0}
   },
   methods: {
     getMaxSizePicture(item) {
       const lastIndex = item.sizes.length - 1
       return item.sizes[lastIndex].url
     },
+    async addImages() {
+      if (this.isLoad === 3) {
+        return
+      }
+      this.isLoad = 1
+      const res = (await api.getPhotoFromAlbum(this.albumId, this.ownerId, this.images.length, 50)).data.response.items
+      if (res.length === 0) {
+        this.isLoad = 3
+      }
+      this.images = this.images.concat(res)
+      this.isLoad = 0
+    },
     async init() {
-      const res = (await api.getPhotoFromAlbum(this.albumId, this.ownerId,0,50)).data.response.items
+      const res = (await api.getPhotoFromAlbum(this.albumId, this.ownerId, 0, 50)).data.response.items
       this.images = this.images.concat(res)
     }
-  }
+  },
 }
 
 </script>

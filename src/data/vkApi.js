@@ -22,12 +22,13 @@ export class Api {
     }
 
     async #getRequest(apiMethod, data = null) {
-        console.log(apiMethod);
         const url = this.#createURL(apiMethod, data)
         let req = await axios.get(url.toString())
         while (req.data.error?.error_code === 6) {
             req = await axios.get(url.toString())
         }
+        console.log(apiMethod);
+        console.log(req.data.response);
         return req
     }
 
