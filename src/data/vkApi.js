@@ -22,6 +22,7 @@ export class Api {
     }
 
     async #getRequest(apiMethod, data = null) {
+        console.log(apiMethod);
         const url = this.#createURL(apiMethod, data)
         let req = await axios.get(url.toString())
         while (req.data.error?.error_code === 6) {
@@ -145,6 +146,17 @@ export class Api {
             count: count,
             album_id: album_id,
             rev: true
+        }
+        return await this.#getRequest('photos.get', data)
+    }
+
+    async getPhotoFromAlbum(album_id, owner_id, start = 0, count = 10) {
+        const data = {
+            owner_id: owner_id,
+            album_id: album_id,
+            rev: true,
+            offset: start,
+            count: count
         }
         return await this.#getRequest('photos.get', data)
     }

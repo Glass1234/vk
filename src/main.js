@@ -4,9 +4,10 @@ import vuetify from './plugins/vuetify'
 import store from './store'
 import {loadFonts} from './plugins/webfontloader'
 import {createRouter, createWebHistory} from "vue-router";
-import FriendPage from "@/views/FriendPage.vue";
 import UserProfilePage from "@/views/UserProfilePage.vue";
+import FriendPage from "@/views/FriendPage.vue";
 import AlbumsPage from "@/views/AlbumsPage.vue";
+import AlbumPage from "@/views/AlbumPage.vue";
 
 loadFonts()
 
@@ -15,6 +16,7 @@ const routes = [
     {path: '/friends', component: FriendPage},
     {path: '/id:id', component: UserProfilePage},
     {path: '/albums', component: AlbumsPage},
+    {path: '/album:id/:album_id', component: AlbumPage},
 ]
 
 const router = createRouter({

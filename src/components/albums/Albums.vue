@@ -21,17 +21,20 @@
         <v-row>
           <v-col cols="12" md="3" class="px-0" v-if="profileAlbum && profileAlbum.count">
             <v-container>
-              <AlbumCard :url="getMaxSizePicture(profileAlbum)" name="Фото профиля" :count="profileAlbum.count"/>
+              <AlbumCard :url="getMaxSizePicture(profileAlbum)" name="Фото профиля" album-id="profile"
+                         :count="profileAlbum.count" :owner-id="fullName.id"/>
             </v-container>
           </v-col>
           <v-col cols="12" md="3" class="px-0" v-if="wallAlbum && wallAlbum.count">
             <v-container>
-              <AlbumCard :url="getMaxSizePicture(wallAlbum)" :name="'Фотографии на стене '+fullName.first_name" :count="wallAlbum.count"/>
+              <AlbumCard :url="getMaxSizePicture(wallAlbum)" :name="'Фотографии на стене '+fullName.first_name"
+                         album-id="wall" :count="wallAlbum.count" :owner-id="fullName.id"/>
             </v-container>
           </v-col>
           <v-col cols="12" md="3" class="px-0" v-if="savedAlbum && savedAlbum.count">
             <v-container>
-              <AlbumCard :url="getMaxSizePicture(savedAlbum)" :name="'Сохронённые фото '+fullName.first_name" :count="savedAlbum.count"/>
+              <AlbumCard :url="getMaxSizePicture(savedAlbum)" :name="'Сохронённые фото '+fullName.first_name"
+                         album-id="saved" :count="savedAlbum.count" :owner-id="fullName.id"/>
             </v-container>
           </v-col>
         </v-row>
@@ -39,14 +42,16 @@
       <template v-if="otherAlbums && otherAlbums.length">
         <v-list-item class="px-0" v-if="fullName">
           <v-divider/>
-          <v-row>
-            <v-col cols="12" md="3" class="px-0"
+          <v-row class="pt-4">
+            <v-col cols="12" md="3" class="pa-0"
                    v-for="album in otherAlbums" :key="album.info.id">
               <v-container v-if="album.img.count">
-                <AlbumCard :url="getMaxSizePicture(album.img)" :name="album.info.title" :count="album.img.count"/>
+                <AlbumCard :url="getMaxSizePicture(album.img)" :name="album.info.title"
+                           :album-id="album.info.id" :count="album.img.count" :owner-id="fullName.id"/>
               </v-container>
               <v-container v-else>
-                <AlbumCard :name="album.info.title" :count="album.img.count"/>
+                <AlbumCard :name="album.info.title" :count="album.img.count"
+                           :album-id="album.info.id" :owner-id="fullName.id"/>
               </v-container>
             </v-col>
           </v-row>
@@ -67,11 +72,6 @@ export default {
   async created() {
     const id = this.$route.query?.id ? this.$route.query?.id : store.state.user.id
     await this.init(id)
-    // console.log('другие', this.otherAlbums);
-    // console.log('стена', this.wallAlbum);
-    // console.log('профиль', this.profileAlbum);
-    // console.log('сохры', this.savedAlbum);
-    // console.log(this.fullName)
   },
   watch: {
     '$route.params'() {
@@ -102,7 +102,6 @@ export default {
     },
     async getOtherAlbums(id) {
       this.otherAlbums = (await api.getAlbums(id)).data.response
-      console.log(this.otherAlbums);
     },
     async getWallAlbum(id) {
       this.wallAlbum = (await api.getWallAlbum(id)).data.response
@@ -141,7 +140,6 @@ export default {
         }
         this.otherAlbums.push(data)
       }
-      console.log(this.otherAlbums);
     }
   },
 }

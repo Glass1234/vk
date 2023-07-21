@@ -13,21 +13,34 @@
           </v-sheet>
         </v-col>
         <v-col class="d-flex">
-          <UserFriend/>
+          <Album_ :album-id="album_id" :owner-id="owner_id"/>
         </v-col>
       </v-row>
     </v-container>
   </v-main>
 </template>
+
 <script>
-import UserFriend from "@/components/friend/UserFriend.vue";
+import Album_ from "@/components/album/Album.vue";
 import SideBar from "@/components/SideBar.vue";
 
 export default {
-  name: 'FriendPage',
-  components: {SideBar, UserFriend}
+  name: 'AlbumPage',
+  created() {
+    this.album_id = this.$route.params.album_id
+    this.owner_id = this.$route.params.id
+  },
+  data() {
+    return {
+      album_id: null,
+      owner_id: null
+    }
+  },
+  components: {Album_, SideBar},
 }
+
 </script>
+
 <style scoped>
 
 </style>
