@@ -1,6 +1,6 @@
 <template>
-  <v-sheet :height="200" style="overflow: hidden" class="container rounded bg-black">
-      <v-img height="200" :src="url" cover/>
+  <v-sheet :height="200" style="overflow: hidden" class="container rounded bg-black pa-1 bg-grey-darken-3">
+      <v-img height="200" width="200" :src="url" cover/>
   </v-sheet>
 </template>
 

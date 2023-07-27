@@ -16,6 +16,7 @@
     "vk-io": "^4.8.3",
     "vue": "^3.2.13",
     "vue-router": "^4.2.2",
+    "vue-virtual-scroller": "^2.0.0-beta.8",
     "vuetify": "^3.0.0-beta.0",
     "vuex": "^4.0.2",
     "webfontloader": "^1.0.0"

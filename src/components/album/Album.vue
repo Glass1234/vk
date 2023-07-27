@@ -1,21 +1,34 @@
 <template>
   <v-container class="rounded bg-grey-darken-3">
-    <v-row>
-      <v-col cols="12" md="2" class="pa-1"
-             v-for="img in images" :key="img.id">
-        <ItemAlbum :ids="img.id" :url="getMaxSizePicture(img)"/>
-      </v-col>
-    </v-row>
+    <RecycleScroller
+        class="scroller"
+        :items="images"
+        :item-size="200"
+        v-slot="{ item }"
+        pageMode
+        gridItems="4"
+        itemClass=''
+    >
+      <ItemAlbum :ids="item.id" :url="getMaxSizePicture(item)" @click="dialog=!dialog;openedImg=item"/>
+    </RecycleScroller>
+    <v-dialog class="v-dialog" v-model="dialog" width="auto" color="bg-grey-darken-3">
+      <v-card class="mx-auto" color="grey-darken-3">
+        <v-img :src="getMaxSizePicture(openedImg)" cover/>
+        <v-card-subtitle>123</v-card-subtitle>
+      </v-card>
+    </v-dialog>
   </v-container>
 </template>
 
 <script>
 import {api} from "@/data/vkApi";
+import {RecycleScroller} from 'vue-virtual-scroller'
+import 'vue-virtual-scroller/dist/vue-virtual-scroller.css'
 import ItemAlbum from "@/components/album/ItemAlbum.vue";
 
 export default {
   name: 'Album_',
-  components: {ItemAlbum},
+  components: {ItemAlbum, RecycleScroller},
   props: {
     albumId: {
       required: true,
@@ -30,7 +43,10 @@ export default {
     this.init()
   },
   data() {
-    return {images: [], isLoad: 0}
+    return {
+      images: [], isLoad: 0,
+      dialog: false, openedImg: null
+    }
   },
   methods: {
     getMaxSizePicture(item) {
@@ -59,5 +75,15 @@ export default {
 </script>
 
 <style scoped>
+.v-dialog :deep(.v-overlay__scrim) {
+  opacity: 0.7;
+}
 
+.scroller {
+  height: 100%;
+}
+
+.vue-recycle-scroller__item-wrapper {
+  display: none
+}
 </style>
