@@ -4,17 +4,62 @@
         class="scroller"
         :items="images"
         :item-size="200"
-        v-slot="{ item }"
+        v-slot="{ item, index }"
         pageMode
-        gridItems="4"
+        :gridItems="4"
         itemClass=''
     >
-      <ItemAlbum :ids="item.id" :url="getMaxSizePicture(item)" @click="dialog=!dialog;openedImg=item"/>
+      <ItemAlbum :ids="item.id" :url="getMaxSizePicture(item)" @click="setInfoPhoto(item, index)"/>
     </RecycleScroller>
-    <v-dialog class="v-dialog" v-model="dialog" width="auto" color="bg-grey-darken-3">
-      <v-card class="mx-auto" color="grey-darken-3">
-        <v-img :src="getMaxSizePicture(openedImg)" cover/>
-        <v-card-subtitle>123</v-card-subtitle>
+    <v-dialog class="v-dialog" v-model="dialog" color="bg-grey-darken-3" max-height="80%">
+      <v-card class="mx-auto" color="grey-darken-3" v-if="infoImg.user">
+        <div class="d-flex flex-no-wrap justify-space-between">
+          <div>
+            <v-img :src="getMaxSizePicture(openedImg)" cover/>
+            <div class="d-flex">
+              <div class="d-flex pa-1 pl-3" style="width: fit-content">
+                <div>{{ infoImg.thisCount }}</div>
+                <v-card-text class="pa-0 mx-1 d-block text-grey-darken-1">из</v-card-text>
+                <div>{{ infoImg.allCount }}</div>
+              </div>
+              <v-spacer/>
+              <v-btn variant="text" :href="infoImg.originalImg" target="_blank">
+                <v-img src="@/assets/icons/open_in_new.svg" width="30" height="30"/>
+              </v-btn>
+            </div>
+          </div>
+          <v-col class="px-0">
+            <div class="d-flex flex-no-wrap align-center mx-2 pb-2">
+              <div>
+                <v-img :src="infoImg.user.photo_200" width="40" class="rounded-circle"/>
+              </div>
+              <div class="ml-1">
+                <div>{{ infoImg.user.first_name + ' ' + infoImg.user.last_name }}</div>
+              </div>
+            </div>
+            <v-divider/>
+            <div class="d-flex flex-no-wrap align-center mx-2">
+              <template v-if="infoImg.user_like">
+                <div>
+                  <v-img src="@/assets/icons/favoriteFill.svg" width="30" height="30"/>
+                </div>
+              </template>
+              <template v-else>
+                <div>
+                  <v-img src="@/assets/icons/favorite.svg" width="30" height="30"/>
+                </div>
+              </template>
+              <div>{{ infoImg.likesCount }}</div>
+            </div>
+            <v-divider/>
+            <div class="text-caption" style="max-width: 300px" v-if="infoImg.text">
+              <div class="pa-2 text-grey-lighten-2">
+                {{ infoImg.text }}
+              </div>
+              <v-divider/>
+            </div>
+          </v-col>
+        </div>
       </v-card>
     </v-dialog>
   </v-container>
@@ -45,13 +90,33 @@ export default {
   data() {
     return {
       images: [], isLoad: 0,
-      dialog: false, openedImg: null
+      dialog: false, openedImg: null, infoImg: {
+        allCount: 0,
+        thisCount: 0,
+        likesCount: 0,
+        user_like: 0,
+        text: '',
+        originalImg: '',
+        user: null
+      }
     }
   },
   methods: {
     getMaxSizePicture(item) {
       const lastIndex = item.sizes.length - 1
       return item.sizes[lastIndex].url
+    },
+    async setInfoPhoto(item, index) {
+      this.dialog = !this.dialog
+      this.openedImg = item
+      this.infoImg.thisCount = index + 1
+      let res = (await api.getInfoPhoto(item.owner_id, item.id)).data.response[0]
+      this.infoImg.likesCount = res.likes.count
+      this.infoImg.user_like = res.likes.user_likes
+      this.infoImg.text = res.text
+      this.infoImg.originalImg = res.orig_photo.url
+      res = (await api.getFriendInfo(res.owner_id)).data.response[0]
+      this.infoImg.user = res
     },
     async addImages() {
       if (this.isLoad === 3) {
@@ -66,8 +131,9 @@ export default {
       this.isLoad = 0
     },
     async init() {
-      const res = (await api.getPhotoFromAlbum(this.albumId, this.ownerId, 0, 50)).data.response.items
-      this.images = this.images.concat(res)
+      const res = (await api.getPhotoFromAlbum(this.albumId, this.ownerId, 0, 50)).data.response
+      this.infoImg.allCount = res.count
+      this.images = this.images.concat(res.items)
     }
   },
 }

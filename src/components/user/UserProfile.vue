@@ -73,8 +73,13 @@
                       </v-card-actions>
                     </v-card>
                   </template>
-
                 </v-dialog>
+                <div>
+                  <v-btn variant="text" :to="`albums?id=${user.id}`">
+                    <v-img src="@/assets/icons/photo_library.svg" aspect-ratio="1/1" width="25px" height="25px"/>
+                    <span class="text-overline ml-1">Альбомы</span>
+                  </v-btn>
+                </div>
               </div>
               <div>Пользователь был в сети
                 <span v-show="!userOnlineTime">очень давно</span>
@@ -88,7 +93,6 @@
                     {{ userOnlineTime?.days }}.{{ userOnlineTime?.month }}.{{ userOnlineTime?.years }}
                   </v-card-item>
                 </v-row>
-
               </v-card>
             </div>
           </div>

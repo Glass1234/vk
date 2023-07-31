@@ -151,6 +151,7 @@ export class Api {
         return await this.#getRequest('photos.get', data)
     }
 
+    // возвращает картинки с альбома, со стартовой позиции и количество
     async getPhotoFromAlbum(album_id, owner_id, start = 0, count = 10) {
         const data = {
             owner_id: owner_id,
@@ -160,6 +161,15 @@ export class Api {
             count: count
         }
         return await this.#getRequest('photos.get', data)
+    }
+
+    // возврщает инфу о фото
+    async getInfoPhoto(owner_id, photo_id) {
+        const data = {
+            photos: `${owner_id}_${photo_id}`,
+            extended: 1
+        }
+        return await this.#getRequest('photos.getById', data)
     }
 }
 
