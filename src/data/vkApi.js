@@ -171,6 +171,44 @@ export class Api {
         }
         return await this.#getRequest('photos.getById', data)
     }
+
+    // поставить лайк на фото
+    async setLikePhoto(owner_id, photo_id) {
+        const data = {
+            type: 'photo',
+            owner_id: owner_id,
+            item_id: photo_id
+        }
+        return await this.#getRequest('likes.add', data)
+    }
+
+    // убрать лайк по фото
+    async deleteLikePhoto(owner_id, photo_id) {
+        const data = {
+            type: 'photo',
+            owner_id: owner_id,
+            item_id: photo_id
+        }
+        return await this.#getRequest('likes.delete', data)
+    }
+
+    // добавить фотографию в сохры
+    async addPhotoInSavedAlbum(owner_id, photo_id) {
+        const data = {
+            owner_id: owner_id,
+            photo_id: photo_id,
+        }
+        return await this.#getRequest('photos.copy', data)
+    }
+
+    // удаляет фотографию из альбома
+    async deletePhotoInAlbum(owner_id, photo_id) {
+        const data = {
+            owner_id: owner_id,
+            photo_id: photo_id
+        }
+        return await this.#getRequest('photos.delete', data)
+    }
 }
 
 export let api = new Api()

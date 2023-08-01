@@ -1,6 +1,8 @@
 <template>
   <v-container class="rounded bg-grey-darken-3">
     <RecycleScroller
+        ref="forScroller"
+        emit-update
         class="scroller"
         :items="images"
         :item-size="200"
@@ -23,29 +25,49 @@
                 <div>{{ infoImg.allCount }}</div>
               </div>
               <v-spacer/>
-              <v-btn variant="text" :href="infoImg.originalImg" target="_blank">
+              <template v-if="!infoImg.isSaved">
+                <v-btn variant="text" @click="addSave(openedImg)">
+                  <div class="text-caption text-grey-lighten-2">Сохранить к себе</div>
+                </v-btn>
+              </template>
+              <template v-else>
+                <div class="d-flex align-center">
+                  <div class="text-caption text-grey-darken-1">Фотография сохранена</div>
+                </div>
+              </template>
+              <template v-if="!infoImg.isDeleted">
+                <v-btn variant="text" title="Удалить фото" @click="deletePhoto(openedImg)">
+                  <v-img src="@/assets/icons/delete.svg" width="30" height="30"/>
+                </v-btn>
+              </template>
+              <template v-else>
+                <div class="d-flex align-center">
+                  <div class="text-caption text-grey-darken-1">Фотография удалена</div>
+                </div>
+              </template>
+              <v-btn variant="text" :href="infoImg.originalImg" target="_blank" title="Открыть оригинал">
                 <v-img src="@/assets/icons/open_in_new.svg" width="30" height="30"/>
               </v-btn>
             </div>
           </div>
           <v-col class="px-0">
             <div class="d-flex flex-no-wrap align-center mx-2 pb-2">
-              <div>
+              <div class="pointer rounded-circle" @click="this.$router.replace(`/id${infoImg.user.id}`)">
                 <v-img :src="infoImg.user.photo_200" width="40" class="rounded-circle"/>
               </div>
-              <div class="ml-1">
-                <div>{{ infoImg.user.first_name + ' ' + infoImg.user.last_name }}</div>
+              <div class="ml-1 pointer" @click="this.$router.replace(`/id${infoImg.user.id}`)">
+                <div class="text-blue-lighten-1">{{ infoImg.user.first_name + ' ' + infoImg.user.last_name }}</div>
               </div>
             </div>
             <v-divider/>
             <div class="d-flex flex-no-wrap align-center mx-2">
               <template v-if="infoImg.user_like">
-                <div>
+                <div class="pointer" @click="deleteLike(openedImg)">
                   <v-img src="@/assets/icons/favoriteFill.svg" width="30" height="30"/>
                 </div>
               </template>
               <template v-else>
-                <div>
+                <div class="pointer" @click="setLike(openedImg)">
                   <v-img src="@/assets/icons/favorite.svg" width="30" height="30"/>
                 </div>
               </template>
@@ -70,6 +92,7 @@ import {api} from "@/data/vkApi";
 import {RecycleScroller} from 'vue-virtual-scroller'
 import 'vue-virtual-scroller/dist/vue-virtual-scroller.css'
 import ItemAlbum from "@/components/album/ItemAlbum.vue";
+import {ref} from 'vue'
 
 export default {
   name: 'Album_',
@@ -87,6 +110,18 @@ export default {
   created() {
     this.init()
   },
+  setup() {
+    const forScroller = ref(null)
+    return {forScroller}
+  },
+  watch: {
+    dialog() {
+      if (this.dialog) {
+        this.infoImg.isSaved = false
+        this.infoImg.isDeleted = false
+      }
+    }
+  },
   data() {
     return {
       images: [], isLoad: 0,
@@ -96,6 +131,8 @@ export default {
         likesCount: 0,
         user_like: 0,
         text: '',
+        isSaved: false,
+        isDeleted: false,
         originalImg: '',
         user: null
       }
@@ -105,6 +142,38 @@ export default {
     getMaxSizePicture(item) {
       const lastIndex = item.sizes.length - 1
       return item.sizes[lastIndex].url
+    },
+    scrollerUpdate() {
+      this.forScroller?.updateVisibleItems(true)
+    },
+    async setLike(item) {
+      const res = (await api.setLikePhoto(item.owner_id, item.id))
+      if (!res.data?.error) {
+        this.infoImg.user_like = 1
+        this.infoImg.likesCount += 1
+      }
+    },
+    async deleteLike(item) {
+      const res = (await api.deleteLikePhoto(item.owner_id, item.id))
+      if (!res.data?.error) {
+        this.infoImg.user_like = 0
+        this.infoImg.likesCount -= 1
+      }
+    },
+    async addSave(item) {
+      const res = (await api.addPhotoInSavedAlbum(item.owner_id, item.id))
+      if (!res.data?.error) {
+        this.infoImg.isSaved = true
+      }
+    },
+    async deletePhoto(item) {
+      const res = (await api.deletePhotoInAlbum(item.owner_id, item.id)).data.response
+      if (res === 1) {
+        this.infoImg.isDeleted = true
+        let searchIndex = this.images.findIndex((img) => img.id === item.id)
+        this.images.splice(searchIndex, 1)
+        this.scrollerUpdate()
+      }
     },
     async setInfoPhoto(item, index) {
       this.dialog = !this.dialog
@@ -151,5 +220,9 @@ export default {
 
 .vue-recycle-scroller__item-wrapper {
   display: none
+}
+
+.pointer {
+  cursor: pointer;
 }
 </style>
