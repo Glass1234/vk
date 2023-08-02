@@ -13,8 +13,8 @@
     >
       <ItemAlbum :ids="item.id" :url="getMaxSizePicture(item)" @click="setInfoPhoto(item, index)"/>
     </RecycleScroller>
-    <v-dialog class="v-dialog" v-model="dialog" color="bg-grey-darken-3" max-height="80%">
-      <v-card class="mx-auto" color="grey-darken-3" v-if="infoImg.user">
+    <v-dialog class="v-dialog" v-model="dialog" color="bg-grey-darken-3" width="auto" max-height="80%">
+      <v-card color="grey-darken-3" v-if="infoImg.user">
         <div class="d-flex flex-no-wrap justify-space-between">
           <div>
             <v-img :src="getMaxSizePicture(openedImg)" cover/>
