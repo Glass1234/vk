@@ -1,5 +1,9 @@
 <template>
   <v-container class="rounded bg-grey-darken-3">
+    <div class="d-flex">
+      <div v-if="albumInfo.fullName">{{ albumInfo.fullName }}</div>
+      <div v-if="albumInfo.albumName" class="ml-2">{{ albumInfo.albumName }}</div>
+    </div>
     <RecycleScroller
         ref="forScroller"
         emit-update
@@ -124,6 +128,10 @@ export default {
   },
   data() {
     return {
+      albumInfo: {
+        fullName: '',
+        albumName: '',
+      },
       images: [], isLoad: 0,
       dialog: false, openedImg: null, infoImg: {
         allCount: 0,
@@ -199,10 +207,30 @@ export default {
       this.images = this.images.concat(res)
       this.isLoad = 0
     },
-    async init() {
+    async getFirstPhoto() {
       const res = (await api.getPhotoFromAlbum(this.albumId, this.ownerId, 0, 50)).data.response
       this.infoImg.allCount = res.count
       this.images = this.images.concat(res.items)
+    },
+    async getInfoUser() {
+      const res = (await api.getUsersMin(this.ownerId)).data.response[0]
+      this.albumInfo.fullName = res.first_name + ' ' + res.last_name
+    },
+    async getNameAlbum() {
+      if (isNaN(parseInt(this.albumId))) {
+        this.albumInfo.albumName = this.albumId
+      } else {
+        const res = (await api.getAlbums(this.ownerId)).data.response.items
+        this.albumInfo.albumName = res.find((item) => item.id == this.albumId).title
+        console.log(this.albumInfo.albumName);
+      }
+    },
+    async init() {
+      await Promise.all([
+        this.getFirstPhoto(),
+        this.getInfoUser(),
+        this.getNameAlbum()
+      ])
     }
   },
 }
