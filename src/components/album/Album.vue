@@ -23,7 +23,7 @@
           <div>
             <v-img :src="getMaxSizePicture(openedImg)" cover/>
             <div class="d-flex">
-              <div class="d-flex pa-1 pl-3" style="width: fit-content">
+              <div class="d-flex align-center pa-1 pl-3" style="width: fit-content">
                 <div>{{ infoImg.thisCount }}</div>
                 <v-card-text class="pa-0 mx-1 d-block text-grey-darken-1">из</v-card-text>
                 <div>{{ infoImg.allCount }}</div>

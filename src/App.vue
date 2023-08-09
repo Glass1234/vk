@@ -19,3 +19,9 @@ export default {
   }),
 }
 </script>
+
+<style>
+img{
+  user-select: none;
+}
+</style>
