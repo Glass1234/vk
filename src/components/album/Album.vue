@@ -49,6 +49,12 @@
                   <div class="text-caption text-grey-darken-1">Фотография удалена</div>
                 </div>
               </template>
+              <v-btn variant="text" @click="copyImg()" title="Скопировать">
+                <v-img src="@/assets/icons/content_copy.svg" width="30" height="30"/>
+              </v-btn>
+              <v-btn variant="text" @click="downloadImg()" title="Скачать">
+                <v-img src="@/assets/icons/download.svg" width="30" height="30"/>
+              </v-btn>
               <v-btn variant="text" :href="infoImg.originalImg" target="_blank" title="Открыть оригинал">
                 <v-img src="@/assets/icons/open_in_new.svg" width="30" height="30"/>
               </v-btn>
@@ -153,6 +159,58 @@ export default {
     },
     scrollerUpdate() {
       this.forScroller?.updateVisibleItems(true)
+    },
+    downloadImg() {
+      let img = new Image();
+      img.setAttribute('crossOrigin', 'anonymous');
+      img.onload = function () {
+        let canvas = document.createElement('canvas');
+        canvas.width = img.width;
+        canvas.height = img.height;
+
+        let context = canvas.getContext('2d');
+
+        context.drawImage(img, 0, 0);
+
+        canvas.toBlob(function (blob) {
+          let link = document.createElement('a');
+          link.download = 'image.png';
+
+          link.href = URL.createObjectURL(blob);
+          link.click();
+
+          URL.revokeObjectURL(link.href);
+        }, 'image/png');
+      };
+      img.src = this.infoImg.originalImg
+    },
+    copyImg(){
+      let img = new Image();
+      img.setAttribute('crossOrigin', 'anonymous');
+      img.onload = function() {
+        let canvas = document.createElement('canvas');
+        canvas.width = img.width;
+        canvas.height = img.height;
+
+        let context = canvas.getContext('2d');
+
+        context.drawImage(img, 0, 0);
+
+        canvas.toBlob(function(blob) {
+          let newImg = new Image();
+
+          newImg.src = URL.createObjectURL(blob);
+
+          let clipboardItem = new ClipboardItem({ 'image/png': blob });
+
+          navigator.clipboard.write([clipboardItem]).then(function() {
+            console.log('Image copied to clipboard!');
+          }, function(error) {
+            console.error('Unable to copy image: ', error);
+          });
+        }, 'image/png', 1);
+      };
+      img.src = this.infoImg.originalImg // URL изображения
     },
     async setLike(item) {
       const res = (await api.setLikePhoto(item.owner_id, item.id))
