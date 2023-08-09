@@ -1,6 +1,7 @@
-import token from "@/data/token";
+
 import axios from "axios";
 import store from "@/store";
+import token from "@/data/token";
 
 export class Api {
     #token = token.token

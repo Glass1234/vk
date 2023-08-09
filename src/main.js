@@ -1,29 +1,21 @@
 import {createApp} from 'vue'
 import App from './App.vue'
-import vuetify from './plugins/vuetify'
 import store from './store'
 import {loadFonts} from './plugins/webfontloader'
-import {createRouter, createWebHistory} from "vue-router";
 import VueVirtualScroller from 'vue-virtual-scroller'
-import UserProfilePage from "@/views/UserProfilePage.vue";
-import FriendPage from "@/views/FriendPage.vue";
-import AlbumsPage from "@/views/AlbumsPage.vue";
-import AlbumPage from "@/views/AlbumPage.vue";
+import {router} from "@/router";
+// Vuetify
+import 'vuetify/styles'
+import {createVuetify} from 'vuetify'
+import * as components from 'vuetify/components'
+import * as directives from 'vuetify/directives'
+
+const vuetify = createVuetify({
+    components,
+    directives,
+})
 
 loadFonts()
-
-const routes = [
-    {path: '/', component: UserProfilePage},
-    {path: '/friends', component: FriendPage},
-    {path: '/id:id', component: UserProfilePage},
-    {path: '/albums', component: AlbumsPage},
-    {path: '/album:id/:album_id', component: AlbumPage},
-]
-
-const router = createRouter({
-    history: createWebHistory(),
-    routes
-})
 
 const app = createApp(App)
 app.use(vuetify)

@@ -37,7 +37,7 @@
 <script>
 import ItemUser from "@/components/friend/itemUSer.vue";
 import store from "@/store";
-import {api} from "@/data/vkApi";
+import {api} from "@/api/index.js"
 
 export default {
   name: 'UserFriend',

@@ -98,7 +98,7 @@
 </template>
 
 <script>
-import {api} from "@/data/vkApi";
+import {api} from "@/api/index.js"
 import {RecycleScroller} from 'vue-virtual-scroller'
 import 'vue-virtual-scroller/dist/vue-virtual-scroller.css'
 import ItemAlbum from "@/components/album/ItemAlbum.vue";

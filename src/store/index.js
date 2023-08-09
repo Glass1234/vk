@@ -1,5 +1,5 @@
 import {createStore} from 'vuex'
-import {api} from "@/data/vkApi";
+import {api} from "@/api/index.js"
 
 const store = createStore({
     state: {

@@ -62,7 +62,7 @@
 </template>
 
 <script>
-import {api} from "@/data/vkApi";
+import {api} from "@/api/index.js"
 import store from "@/store";
 import AlbumCard from "@/components/albums/AlbumCard.vue";
 
