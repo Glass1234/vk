@@ -22,7 +22,7 @@
     <v-window v-model="tab" class="rounded">
       <v-window-item value="all" class="py-1">
         <template v-for="item in searchPeople(allPeople,inputSearch)" :key="item.id">
-          <item-user :user="item"/>
+          <item-user :user="item" @del="deleteFriend($event)"/>
         </template>
       </v-window-item>
       <v-window-item value="online">
@@ -46,8 +46,8 @@ export default {
     this.init()
     this.tab = this.$route.query.section
   },
-  watch:{
-    '$route.params'(){
+  watch: {
+    '$route.params'() {
       this.init()
     }
   },
@@ -78,10 +78,21 @@ export default {
       this.onlinePeople = (await api.getFriendsOnline(this.idSearch)).data.response
       this.onlinePeople = (await api.getUsersMin(this.onlinePeople.online + this.onlinePeople.online_mobile)).data.response
     },
+    async deleteFriend(user_id) {
+      const res = (await api.deleteFriend(user_id)).data.response
+      if (res.success) {
+        let index = this.allPeople.findIndex((user) => user.id === user_id)
+        this.allPeople.splice(index, 1)
+        index = this.onlinePeople.findIndex((user) => user.id === user_id)
+        this.onlinePeople.splice(index, 1)
+      }
+    },
     async init() {
       if (this.$route.query?.id) {
         this.idSearch = this.$route.query.id
-      }else {this.idSearch = store.state.user.id}
+      } else {
+        this.idSearch = store.state.user.id
+      }
       await Promise.all([
         this.getAllPeople(),
         this.getOnlinePeople()

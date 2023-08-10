@@ -1,4 +1,3 @@
-
 import axios from "axios";
 import store from "@/store";
 import token from "@/data/token";
@@ -209,6 +208,22 @@ export class Api {
             photo_id: photo_id
         }
         return await this.#getRequest('photos.delete', data)
+    }
+
+    // удаляет пользователя из друзей
+    async deleteFriend(user_id) {
+        const data = {
+            user_id: user_id
+        }
+        return await this.#getRequest('friends.delete', data)
+    }
+
+    // возвращает инфу о заявке пользователя в друзьях
+    async isFriend(user_id) {
+        const data = {
+            user_ids: user_id
+        }
+        return await this.#getRequest('friends.areFriends', data)
     }
 }
 

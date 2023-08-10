@@ -80,6 +80,14 @@
                     <span class="text-overline ml-1">Альбомы</span>
                   </v-btn>
                 </div>
+                <v-spacer/>
+                <div v-if="friendStatus===3">
+                  <v-btn variant="text" @click="deleteFriend()">
+                    <v-img src="@/assets/icons/sentiment_dissatisfied.svg" aspect-ratio="1/1" width="25px"
+                           height="25px"/>
+                    <span class="text-overline ml-1">Удалить из друзей</span>
+                  </v-btn>
+                </div>
               </div>
               <div>Пользователь был в сети
                 <span v-show="!userOnlineTime">очень давно</span>
@@ -180,6 +188,7 @@ export default {
       usersInfOfline: null,
       isPrived: true,
       userOnlineTime: {},
+      friendStatus: 0
     }
   },
   methods: {
@@ -244,6 +253,16 @@ export default {
       this.usersInfOfline = (await api.getUsersMin(this.cropArr(this.people.items))).data.response
       this.usersInfOfline = this.cropArr(this.usersInfOfline)
     },
+    async deleteFriend() {
+      const res = (await api.deleteFriend(this.user.id)).data.response
+      if (res.success) {
+        this.friendStatus = 2
+      }
+    },
+    async isFriend() {
+      const res = (await api.isFriend(this.user.id)).data.response[0]
+      this.friendStatus = res.friend_status
+    },
     async init() {
       this.user = null
       this.people = null
@@ -259,7 +278,8 @@ export default {
         this.getPeople(),
         this.getGroups(),
         this.getCommunities(),
-        this.getOnlineStatus()
+        this.getOnlineStatus(),
+        this.isFriend()
       ])
       await this.getFriendsOnli()
       await this.getUsersInfOnline()

@@ -1,5 +1,5 @@
 <template>
-  <v-list-item>
+  <v-list-item class="test rounded">
     <template v-slot:prepend>
       <v-btn
           icon
@@ -12,11 +12,23 @@
     <div class="ml-2">
       <v-list-item-title>{{ user.first_name + ' ' + user.last_name }}</v-list-item-title>
       <v-list-item-subtitle>
-        <v-btn variant="plain"
-               size="x-small"
-               class="text-caption pl-0" color="blue-accent-1">
-          Написать сообщение
-        </v-btn>
+        <div class="d-flex">
+          <v-btn variant="tonal"
+                 size="x-small"
+                 class="text-caption pl-0" color="blue-accent-1">
+            Написать сообщение
+          </v-btn>
+          <v-spacer/>
+          <v-btn variant="tonal" @click="del()"
+                 size="x-small"
+                 class="text-caption pl-0" color="red">
+            <div class="d-flex">
+              <v-img :src="require('@/assets/icons/delete.svg')" width="20"/>
+              <span>Удалить из друзей</span>
+            </div>
+          </v-btn>
+        </div>
+
       </v-list-item-subtitle>
     </div>
   </v-list-item>
@@ -29,9 +41,20 @@ export default {
     user: {
       required: true,
     }
+  },
+  data() {
+    return {}
+  },
+  methods: {
+    del() {
+      this.$emit('del', this.user.id)
+    }
   }
 }
 </script>
 
 <style scoped>
+.test:hover{
+  border: 2px solid white;
+}
 </style>
