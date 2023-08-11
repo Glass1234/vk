@@ -55,6 +55,6 @@ export default {
 
 <style scoped>
 .test:hover{
-  border: 2px solid white;
+  background-color: #212121;
 }
 </style>

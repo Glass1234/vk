@@ -210,7 +210,7 @@ export class Api {
         return await this.#getRequest('photos.delete', data)
     }
 
-    // удаляет пользователя из друзей
+    // отклоняет заявку/удаляет из друзей
     async deleteFriend(user_id) {
         const data = {
             user_id: user_id
@@ -224,6 +224,14 @@ export class Api {
             user_ids: user_id
         }
         return await this.#getRequest('friends.areFriends', data)
+    }
+
+    // принимает/создаёт заявку в друзья
+    async addFriend(user_id) {
+        const data = {
+            user_id: user_id
+        }
+        return await this.#getRequest('friends.add', data)
     }
 }
 

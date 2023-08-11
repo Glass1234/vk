@@ -88,6 +88,27 @@
                     <span class="text-overline ml-1">Удалить из друзей</span>
                   </v-btn>
                 </div>
+                <div v-else-if="friendStatus===2">
+                  <v-btn variant="text" @click="acceptFriend()">
+                    <v-img src="@/assets/icons/add_reaction.svg" aspect-ratio="1/1" width="25px"
+                           height="25px"/>
+                    <span class="text-overline ml-1">Принять заявку</span>
+                  </v-btn>
+                </div>
+                <div v-else-if="friendStatus===0 && user.id!== store.state.user.id">
+                  <v-btn variant="text" @click="acceptFriend()">
+                    <v-img src="@/assets/icons/add.svg" aspect-ratio="1/1" width="25px"
+                           height="25px"/>
+                    <span class="text-overline ml-1">Добавить в друзья</span>
+                  </v-btn>
+                </div>
+                <div v-else-if="friendStatus===1">
+                  <v-btn variant="text" @click="deleteFriend">
+                    <v-img src="@/assets/icons/remove.svg" aspect-ratio="1/1" width="25px"
+                           height="25px"/>
+                    <span class="text-overline ml-1">Отписаться</span>
+                  </v-btn>
+                </div>
               </div>
               <div>Пользователь был в сети
                 <span v-show="!userOnlineTime">очень давно</span>
@@ -257,6 +278,14 @@ export default {
       const res = (await api.deleteFriend(this.user.id)).data.response
       if (res.success) {
         this.friendStatus = 2
+      }
+    },
+    async acceptFriend() {
+      const res = (await api.addFriend(this.user.id)).data.response
+      if (res === 2) {
+        this.friendStatus = 3
+      } else if (res === 1) {
+        this.friendStatus = 1
       }
     },
     async isFriend() {
