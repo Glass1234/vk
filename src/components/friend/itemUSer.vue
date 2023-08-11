@@ -15,16 +15,24 @@
         <div class="d-flex">
           <v-btn variant="tonal"
                  size="x-small"
-                 class="text-caption pl-0" color="blue-accent-1">
+                 class="text-caption" color="blue-accent-1">
             Написать сообщение
           </v-btn>
           <v-spacer/>
-          <v-btn variant="tonal" @click="del()"
+          <v-btn variant="tonal" @click="add()" v-if="isAdd"
                  size="x-small"
-                 class="text-caption pl-0" color="red">
+                 class="text-caption mr-2" color="green">
+            <div class="d-flex">
+              <v-img :src="require('@/assets/icons/add.svg')" width="20"/>
+              <span>{{ isAdd }}</span>
+            </div>
+          </v-btn>
+          <v-btn variant="tonal" @click="del()" v-if="isDeleted"
+                 size="x-small"
+                 class="text-caption" color="red">
             <div class="d-flex">
               <v-img :src="require('@/assets/icons/delete.svg')" width="20"/>
-              <span>Удалить из друзей</span>
+              <span>{{ isDeleted }}</span>
             </div>
           </v-btn>
         </div>
@@ -40,6 +48,16 @@ export default {
   props: {
     user: {
       required: true,
+    },
+    isDeleted: {
+      required: false,
+      default: '',
+      type: String
+    },
+    isAdd: {
+      required: false,
+      default: '',
+      type: String
     }
   },
   data() {
@@ -48,13 +66,16 @@ export default {
   methods: {
     del() {
       this.$emit('del', this.user.id)
+    },
+    add() {
+      this.$emit('add', this.user.id)
     }
   }
 }
 </script>
 
 <style scoped>
-.test:hover{
+.test:hover {
   background-color: #212121;
 }
 </style>

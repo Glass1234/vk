@@ -233,6 +233,22 @@ export class Api {
         }
         return await this.#getRequest('friends.add', data)
     }
+
+    // возвращает список исходящих заявок в друзья
+    async getListOutFriend() {
+        const data = {
+            out: 1
+        }
+        return await this.#getRequest('friends.getRequests', data)
+    }
+
+    // возвращает список входящих заявок в друзья
+    async getListInFriend() {
+        const data = {
+            need_viewed: 1
+        }
+        return await this.#getRequest('friends.getRequests', data)
+    }
 }
 
 export let api = new Api()
