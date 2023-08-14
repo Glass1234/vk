@@ -249,6 +249,36 @@ export class Api {
         }
         return await this.#getRequest('friends.getRequests', data)
     }
+
+    // возвращает посты из ленты
+    async getNewsFeed(start = 0, count = 10) {
+        const data = {
+            start_from: start,
+            count: count,
+            filters: 'post'
+        }
+        return await this.#getRequest('newsfeed.get', data)
+    }
+
+    // поставить лайк на пост
+    async setLikePost(owner_id, photo_id) {
+        const data = {
+            type: 'post',
+            owner_id: owner_id,
+            item_id: photo_id
+        }
+        return await this.#getRequest('likes.add', data)
+    }
+
+    // убрать лайк с поста
+    async deleteLikePost(owner_id, photo_id) {
+        const data = {
+            type: 'post',
+            owner_id: owner_id,
+            item_id: photo_id
+        }
+        return await this.#getRequest('likes.delete', data)
+    }
 }
 
 export let api = new Api()

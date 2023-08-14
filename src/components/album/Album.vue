@@ -103,6 +103,7 @@ import {RecycleScroller} from 'vue-virtual-scroller'
 import 'vue-virtual-scroller/dist/vue-virtual-scroller.css'
 import ItemAlbum from "@/components/album/ItemAlbum.vue";
 import {ref} from 'vue'
+import {getMaxSizePicture} from "@/utils";
 
 export default {
   name: 'Album_',
@@ -153,10 +154,7 @@ export default {
     }
   },
   methods: {
-    getMaxSizePicture(item) {
-      const lastIndex = item.sizes.length - 1
-      return item.sizes[lastIndex].url
-    },
+    getMaxSizePicture,
     scrollerUpdate() {
       this.forScroller?.updateVisibleItems(true)
     },

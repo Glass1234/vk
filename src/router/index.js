@@ -2,6 +2,7 @@ import UserProfilePage from "@/views/UserProfilePage.vue";
 import FriendPage from "@/views/FriendPage.vue";
 import AlbumsPage from "@/views/AlbumsPage.vue";
 import AlbumPage from "@/views/AlbumPage.vue";
+import NewsFeedPage from "@/views/NewsFeedPage.vue";
 import {createRouter, createWebHistory} from "vue-router";
 
 const routes = [
@@ -10,6 +11,7 @@ const routes = [
     {path: '/id:id', component: UserProfilePage},
     {path: '/albums', component: AlbumsPage},
     {path: '/album:id/:album_id', component: AlbumPage},
+    {path: '/feed', component: NewsFeedPage},
 ]
 
 export const router = createRouter({

@@ -182,6 +182,7 @@
 <script>
 import store from "@/store";
 import {api} from "@/api/index.js"
+import {convertDate} from "@/utils";
 
 export default {
   name: 'UserProfile',
@@ -224,12 +225,7 @@ export default {
       }
     },
     convertDate(unixTime) {
-      const date = new Date(unixTime * 1000)
-      this.userOnlineTime['years'] = date.getFullYear()
-      this.userOnlineTime['month'] = date.getMonth() < 10 ? `0${date.getMonth() + 1}` : date.getMonth() + 1
-      this.userOnlineTime['days'] = date.getUTCDate() < 10 ? `0${date.getUTCDate()}` : date.getUTCDate()
-      this.userOnlineTime['hours'] = date.getHours() < 10 ? `0${date.getHours()}` : date.getHours()
-      this.userOnlineTime['minutes'] = date.getMinutes() < 10 ? `0${date.getMinutes()}` : date.getMinutes()
+      this.userOnlineTime = convertDate(unixTime)
     },
     async getOnlineStatus() {
       const date = (await api.getLastOnlineUser(this.user.id)).data.response[0].last_seen?.time

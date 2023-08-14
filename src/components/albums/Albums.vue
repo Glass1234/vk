@@ -65,6 +65,7 @@
 import {api} from "@/api/index.js"
 import store from "@/store";
 import AlbumCard from "@/components/albums/AlbumCard.vue";
+import {getMaxSizePicture} from "@/utils";
 
 export default {
   name: 'UserAlbums',
@@ -89,16 +90,13 @@ export default {
     }
   },
   methods: {
+    getMaxSizePicture,
     countAlbums() {
       let count = this.otherAlbums.length
       count = this.wallAlbum?.count ? count + 1 : count
       count = this.profileAlbum?.count ? count + 1 : count
       count = this.savedAlbum?.count ? count + 1 : count
       return count
-    },
-    getMaxSizePicture(item) {
-      const lastIndex = item.items[0].sizes.length - 1
-      return item.items[0].sizes[lastIndex].url
     },
     async getOtherAlbums(id) {
       this.otherAlbums = (await api.getAlbums(id)).data.response
