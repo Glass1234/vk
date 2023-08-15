@@ -1,9 +1,8 @@
 <template>
   <v-sheet class="pa-3 rounded" color="black" max-width="500">
     <header-post :name="owner.name" :photo="owner.photo_200" :date-time="post.date"/>
-    <main-post :photos="photos"/>
-    <footer-post :views="post.views.count" :comments="post.comments" :reposts="post.reposts" :likes="post.likes"
-                 :owner_id="post.owner_id" :id="post.id"/>
+    <main-post :photos="photos" :text-post="post.text"/>
+    <footer-post :actions="actionsButtons" :ids="ids"/>
   </v-sheet>
 </template>
 
@@ -34,6 +33,20 @@ export default {
       })
       res = res.filter((item) => item !== undefined)
       return res
+    },
+    ids() {
+      return {
+        owner_id: this.post.owner_id,
+        id: this.post.id
+      }
+    },
+    actionsButtons() {
+      return {
+        views: this.post.views.count,
+        comments: this.post.comments,
+        reposts: this.post.reposts,
+        likes: this.post.likes
+      }
     }
   },
   methods: {
