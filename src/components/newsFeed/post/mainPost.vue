@@ -1,9 +1,9 @@
 <template>
   <v-row class="justify-center">
     <div class="w-100 px-2 pb-2">
-      {{textPost}}
+      {{ textPost }}
     </div>
-    <div class="customGrid" v-if="photos.length">
+    <div class="customGrid" :style="{'border-left':isCopyPost?'aqua solid 4px':''}" v-if="photos.length">
       <div class="container border" v-for="photo in photos" :key="photo.id">
         <v-img v-if="photo" :src="photo.img" width="200" height="200" cover=""/>
       </div>
@@ -22,6 +22,11 @@ export default {
     textPost: {
       required: false,
       type: String
+    },
+    isCopyPost: {
+      required: false,
+      type: Boolean,
+      default: false
     }
   },
 }

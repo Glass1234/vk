@@ -1,7 +1,7 @@
 <template>
   <v-sheet class="pa-3 rounded" color="black" max-width="500">
     <header-post :name="owner.name" :photo="owner.photo_200" :date-time="post.date"/>
-    <main-post :photos="photos" :text-post="post.text"/>
+    <main-post :photos="photos" :text-post="post.text" :is-copy-post="isCopyPost"/>
     <footer-post :actions="actionsButtons" :ids="ids"/>
   </v-sheet>
 </template>
@@ -22,16 +22,27 @@ export default {
     }
   },
   computed: {
+    isCopyPost() {
+      return !!this.post?.copy_history;
+    },
     photos() {
-      let res = this.post.attachments.map((photo) => {
-        if (photo.type === 'photo') {
-          return {
-            img: this.getMaxSizePicture(photo.photo),
-            id: photo.photo.id
+      let res = []
+      if (this.post.attachments.length) {
+        res = this.post.attachments
+      } else if (this.post.copy_history[0].attachments.length) {
+        res = this.post.copy_history[0].attachments
+      }
+      if (res.length) {
+        res = res.map((photo) => {
+          if (photo.type === 'photo') {
+            return {
+              img: this.getMaxSizePicture(photo.photo),
+              id: photo.photo.id
+            }
           }
-        }
-      })
-      res = res.filter((item) => item !== undefined)
+        })
+        res = res.filter((item) => item !== undefined)
+      }
       return res
     },
     ids() {

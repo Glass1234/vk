@@ -30,7 +30,7 @@ export default {
       const index = this.groups.findIndex((group) => group.id === id)
       return this.groups[index]
     },
-    async getPosts(count = 10) {
+    async getPosts(count = 15) {
       const res = (await api.getNewsFeed(0, count)).data.response
       this.items = res.items
       this.groups = res.groups
