@@ -27,9 +27,9 @@ export default {
     },
     photos() {
       let res = []
-      if (this.post.attachments.length) {
+      if (this.post.attachments.length !== 0) {
         res = this.post.attachments
-      } else if (this.post.copy_history[0].attachments.length) {
+      } else if (this.post.copy_history !== undefined && this.post.copy_history[0].attachments.length !== 0) {
         res = this.post.copy_history[0].attachments
       }
       if (res.length) {

@@ -4,7 +4,7 @@
       {{ textPost }}
     </div>
     <div class="customGrid" :style="{'border-left':isCopyPost?'aqua solid 4px':''}" v-if="photos.length">
-      <div class="container border" v-for="photo in photos" :key="photo.id">
+      <div class="container border" v-for="photo in photos" :key="photo.id" @click="openOriginalImg(photo.img)">
         <v-img v-if="photo" :src="photo.img" width="200" height="200" cover=""/>
       </div>
     </div>
@@ -27,6 +27,11 @@ export default {
       required: false,
       type: Boolean,
       default: false
+    }
+  },
+  methods: {
+    openOriginalImg(src) {
+      window.open(src, '_blank');
     }
   },
 }
