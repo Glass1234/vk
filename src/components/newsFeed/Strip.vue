@@ -21,7 +21,9 @@ export default {
   data() {
     return {
       items: [],
-      groups: []
+      groups: [],
+      isLoad: 0,
+      nextFrom: 0
     }
   },
   methods: {
@@ -34,6 +36,21 @@ export default {
       const res = (await api.getNewsFeed(0, count)).data.response
       this.items = res.items
       this.groups = res.groups
+      this.nextFrom = res.next_from
+    },
+    async addPosts() {
+      if (this.isLoad === 3) {
+        return
+      }
+      this.isLoad = 1
+      const res = (await api.getNewsFeed(this.nextFrom, 10)).data.response
+      if (res.items.length === 0) {
+        this.isLoad = 3
+      }
+      this.items = this.items.concat(res.items)
+      this.groups = this.groups.concat(res.groups)
+      this.nextFrom = res.next_from
+      this.isLoad = 0
     },
     async init() {
       await Promise.all([

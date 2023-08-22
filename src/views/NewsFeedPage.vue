@@ -13,7 +13,7 @@
           </v-sheet>
         </v-col>
         <v-col class="d-flex">
-          <feed-strip/>
+          <feed-strip ref="feedScroll"/>
         </v-col>
       </v-row>
     </v-container>
@@ -26,6 +26,20 @@ import FeedStrip from "@/components/newsFeed/Strip.vue";
 
 export default {
   name: "NewsFeedPage",
+  mounted() {
+    window.addEventListener("scroll", this.handleScroll);
+  },
+  unmounted() {
+    window.removeEventListener("scroll", this.handleScroll);
+  },
+  methods: {
+    handleScroll() {
+      if ((this.$refs.feedScroll.$el.getBoundingClientRect().bottom < window.innerHeight + 200)
+          && this.$refs.feedScroll.isLoad === 0) {
+        this.$refs.feedScroll.addPosts()
+      }
+    },
+  },
   components: {FeedStrip, SideBar}
 }
 </script>
