@@ -37,7 +37,8 @@ export default {
           if (photo.type === 'photo') {
             return {
               img: this.getMaxSizePicture(photo.photo),
-              id: photo.photo.id
+              id: photo.photo.id,
+              owner_id: photo.photo.owner_id
             }
           }
         })

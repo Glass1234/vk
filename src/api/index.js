@@ -279,6 +279,14 @@ export class Api {
         }
         return await this.#getRequest('likes.delete', data)
     }
+
+    // возвращает информацию о группе
+    async getGroupInfo(group_id) {
+        const data = {
+            group_id: group_id*-1
+        }
+        return await this.#getRequest('groups.getById', data)
+    }
 }
 
 export let api = new Api()

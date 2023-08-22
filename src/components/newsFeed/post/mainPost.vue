@@ -4,16 +4,24 @@
       {{ textPost }}
     </div>
     <div class="customGrid" :style="{'border-left':isCopyPost?'aqua solid 4px':''}" v-if="photos.length">
-      <div class="container border" v-for="photo in photos" :key="photo.id" @click="openOriginalImg(photo.img)">
+      <div class="container border" v-for="photo in photos" :key="photo.id"
+           @click="setPhotoInDialog(photo.owner_id,photo.id)">
         <v-img v-if="photo" :src="photo.img" width="200" height="200" cover=""/>
       </div>
     </div>
   </v-row>
+  <v-dialog class="v-dialog" v-model="dialog" color="bg-grey-darken-3" width="auto" max-height="80%">
+    <dialog-img :src-img="setImg" @save="addSave"/>
+  </v-dialog>
 </template>
 
 <script>
+import DialogImg from "@/components/newsFeed/post/dialogImg.vue";
+import {api} from "@/api";
+
 export default {
   name: "mainPost",
+  components: {DialogImg},
   props: {
     photos: {
       required: false,
@@ -29,11 +37,18 @@ export default {
       default: false
     }
   },
-  methods: {
-    openOriginalImg(src) {
-      window.open(src, '_blank');
-    }
+  data() {
+    return {dialog: false, setImg: null}
   },
+  methods: {
+    async setPhotoInDialog(owner_id, photo_id) {
+      this.setImg = (await api.getInfoPhoto(owner_id, photo_id)).data.response[0]
+      this.dialog = !this.dialog
+    },
+    async addSave(data) {
+      await api.addPhotoInSavedAlbum(data.owner_id, data.photo_id)
+    }
+  }
 }
 </script>
 
