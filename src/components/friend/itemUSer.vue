@@ -1,5 +1,5 @@
 <template>
-  <v-list-item class="test rounded">
+  <v-list-item class="hovering rounded">
     <template v-slot:prepend>
       <v-btn
           icon
@@ -75,7 +75,7 @@ export default {
 </script>
 
 <style scoped>
-.test:hover {
+.hovering:hover {
   background-color: #212121;
 }
 </style>

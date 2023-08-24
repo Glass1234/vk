@@ -283,9 +283,19 @@ export class Api {
     // возвращает информацию о группе
     async getGroupInfo(group_id) {
         const data = {
-            group_id: group_id*-1
+            group_id: group_id * -1
         }
         return await this.#getRequest('groups.getById', data)
+    }
+
+    // возвращает массив сообщений
+    async getChatsUser(offset = 0, count = 20) {
+        const data = {
+            offset: offset,
+            count: count,
+            extended: 1
+        }
+        return await this.#getRequest('messages.getConversations', data)
     }
 }
 
